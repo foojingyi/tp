@@ -25,12 +25,13 @@ public class Person {
     private final Address address;
     private final Height height;
     private final Set<Tag> tags = new HashSet<>();
+    private final Remark remark;
 
     /**
      * Every field must be present and not null.
      */
     public Person(Ic ic, Name name, Phone phone, Email email, Address address, Height height,
-                  Set<Tag> tags) {
+                  Set<Tag> tags, Remark remark) {
         requireAllNonNull(ic, name, phone, email, address, height, tags);
         this.ic = ic;
         this.name = name;
@@ -39,6 +40,7 @@ public class Person {
         this.address = address;
         this.height = height;
         this.tags.addAll(tags);
+        this.remark = remark;
     }
 
     public Ic getIc() {
@@ -63,6 +65,10 @@ public class Person {
 
     public Height getHeight() {
         return height;
+    }
+
+    public Remark getRemark() {
+        return remark;
     }
 
     /**
