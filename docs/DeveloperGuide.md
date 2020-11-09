@@ -111,7 +111,7 @@ Given below is the Sequence Diagram for interactions within the `Logic` componen
 
 ### Model component
 
-![Structure of the Model Component](images/ModelClassDiagramUpdated.png)
+![Structure of the Model Component](images/ModelClassDiagram.png)
 
 **Model**
 
@@ -123,14 +123,17 @@ The `Model`,
 * stores the medi book data.
 * exposes an unmodifiable `ObservableList<Patient>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
 * does not depend on any of the other three components.
+* `Name` and `Date` are packaged separately under CommonFields as they are used by multiple components within Model.
 
 **Patient**
 
 The `Patient`,
 * stores `IC`, `Name`, `DateOfBirth` and `Phone` objects that represent the patient's IC number, name, date of birth and phone number respectively.
 * stores `Optionals` of `Address`, `Email`, `Height`, `Weight`, `Bmi` and `BloodType` objects.
+* stores a `MedicalNoteList` object which keeps track of `MedicalNote` objects belonging to the patient.
 * `Bmi` is automatically computed and stored within Optional if both `Height` and `Weight` are present.
-
+* stores `Allergy`, `Condition` and `Treatment` objects, where each patient can store any number of such objects.
+* `Allergy`, `Condition` and `Treatment` are considered "medical details"/"medical tags", and inherit from the `Tag` class.
 
 ### Storage component
 
@@ -141,10 +144,12 @@ The `Patient`,
 The `Storage` component,
 * can save `UserPref` objects in json format and read it back.
 * can save the medi book data in json format and read it back.
+* can save the medical notes data in separate json file for each individual patient and read it back.
+* can rename or delete the medical note data.
 
 ### Common classes
 
-Classes used by multiple components are in the `seedu.addressbook.commons` package.
+Classes used by multiple components are in the `seedu.medibook.commons` package.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -152,31 +157,43 @@ Classes used by multiple components are in the `seedu.addressbook.commons` packa
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### Adding medical notes to patients
+### Medical Notes
+
+![Structure of MedicalNote Package (Higher Level)](images/MedicalNoteClassDiagram1.png)
+
+The `MedicalNoteList`,
+* stores `MedicalNote` objects belonging to a patient
+* exposes a `ObservableList<MedicalNote>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
+* sorts `MedicalNote` objects from most recent to least recent using a `MedicalNoteComparator` object 
+
+![Structure of MedicalNote Package (Lower Level)](images/MedicalNoteClassDiagram2.png)
+
+The `MedicalNote`,
+* stores `Date`, `Doctor` and `Content` objects that represent the date of creation, doctor who authored the note and content of the note.
+
+### Adding medical notes to a patient
 
 #### Implementation
 
-* Each medical note is stored as a `MedicalNote` object.
-* Every `patient` has a `MedicalNoteList` object that represents the list of medical notes belonging to that `patient`.
 * `AddNoteCommandParser` parses user's string input into a `AddNoteCommand`
 * Target `patient` is retrieved from `ModelManager#getPatientToAccess()`
 * `doctor` is retrieved from `ModelManager#getActiveUser()` 
 
 The following sequence diagrams show how add medical note operation works:
 
-![NoteSequenceDiagramMain](images/NoteSequenceDiagramFocusLogic.png)
+![AddNoteSequenceDiagramMain](images/AddNoteSequenceDiagramFocusLogic.png)
 
-![NoteSequenceDiagramSD](images/NoteSequenceDiagramSDUpdatePatientInModel.png)
+![AddNoteSequenceDiagramSD](images/AddNoteSequenceDiagramSDUpdatePatientInModel.png)
 
-Step 1. While on the patient's profile page, the user inputs `addnote c/Patient...`.
+Step 1. While on the patient's profile page and logged in as a doctor, the user inputs `addnote c/Patient...`.
 The user input is handled by `LogicManager`, which then passes it to `MediBookParser` to be parsed.
 
 Step 2. `MediBookParser` creates an instance of `AddNoteCommandParser` to parse the user input as a `AddNoteCommand`. 
-It returns a `AddNoteCommand` object to `LogicManager`
+It returns a `AddNoteCommand` object to `LogicManager`.
 
 Step 3. `LogicManager` then executes the `AddNoteCommand` via `AddNoteCommand#execute()`.
 
-Step 4. `AddNoteCommand#execute()` identifies the target `patient` object via `ModelManager#getPatientToAccess()`.
+Step 4. `AddNoteCommand#execute()` identifies the target `patient` object and the `doctor` authoring the note.
 It then updates the model with the new medical note added to the patient using `Patient#addMedicalNote()`.
 
 #### Design consideration
@@ -185,20 +202,60 @@ It then updates the model with the new medical note added to the patient using `
 
 We have decided to implement `addnote` command this way for 2 reasons:
 1. When user starts MediBook, not all `patient`s' list of medical notes would have been loaded into the program's memory. 
-Only allowing `addnote` after `access` ensures that the patient's list of medical notes would have been loaded at the point of adding new medical notes.
+Only allowing `addnote` after `access` ensures that the patient's list of medical notes would have been loaded at that point.
 2. It allows for a shorter `addnote` command as the user does not need to specify a target `patient`.
 
 Elaboration on point 1:
 * A medical records software contains many `patients`, each with potentially many `medical note`s.
 * Every `patient` in the `model` has a `MedicalNoteList` that is initialised as an empty list at 
   program start-up to optimise start-up time
-* `MedicalNoteList` of every patient is loaded only when necessary (`access` on patient)
+* `MedicalNoteList` of every patient is loaded only when necessary.
 * `access`-ing a `patient` loads the stored medical note list and sets the `MedicalNoteList` of the `patient` to the retrieved list
-* Hence, `addnote` command can only be called when viewing a `patient`'s profile as it ensures that the `MedicalNoteList` has already been loaded
 
-### Account creation and login
+
+### Deleting medical notes from a patient
 
 #### Implementation
+
+* The implementation of parsing of a `deletenote` command is similar to that of a `addnote` command.
+* The general action of `DeleteNoteCommand#execute()` is similar to that of `AddNoteCommand#execute()`.
+* A key difference is that the `DeleteNoteCommand#execute()` verifies that the logged in `Doctor`
+is the same `Doctor` who authored the `MedicalNote` object before proceeding with the update.
+
+The following sequence diagram highlights unique aspects of delete note operation:
+
+![DeleteNoteSequenceDiagramModel](images/DeleteNoteSequenceModel.png)
+
+Step 1. `LogicManager` executes the `DeleteNoteCommand` via `DeleteNoteCommand#execute()`.
+
+Step 2. `DeleteNoteCommand` retrieves `displayedPatient` and `activeUser` from `ModelManager`.
+
+Step 3. `DeleteNoteCommand` verifies that `activeUser` is the author of the target `noteToDelete` via `MedicalNote#isAuthoredBy(Doctor)`.
+Note that an exception is thrown at this point if the author does not match `activeUser`.
+
+Step 4. `DeleteNoteCommand` updates the model with the medical note deleted from the patient using `Patient#deleteMedicalNoteAtIndex(int)`.
+
+
+### Editing medical notes of a patient
+
+#### Implementation
+
+* The implementation of `EditNoteCommand#execute()` makes use of `addnote` and `deletenote` implementations.
+
+Step 1. `EditNoteCommand` identifies the target `MedicalNote` object.
+
+Step 2. `EditNoteCommand` verifies that `activeUser` is the author of the target `MedicalNote`.
+Note that an exception is thrown at this point if the author does not match `activeUser`.
+
+Step 3. `EditNoteCommand` creates a new `MedicalNote` object based on `EditNoteDescriptor`.
+
+Step 4. `EditNoteCommand` attempts to delete the target `MedicalNote` object and add the newly created `MedicalNote` object.
+If the edit results in duplicates, an exception is thrown and no changes are made.
+
+
+### Account creation and logging in
+
+#### Account creation implementation
 
 The account creation feature is facilitated by a new `CreateAccountWindow` class in the UI.
 
@@ -214,6 +271,8 @@ The following activity diagram summarises what happens when a user attempts to c
 
 ![CreateAccountActivityDiagram](images/CreateAccountActivityDiagram.png)
 
+#### Login implementation
+
 The login feature is facilitated by a new `LoginWindow` class in the UI.
 
 ![LoginSequenceDiagram](images/LoginSequenceDiagram.png)
@@ -225,6 +284,24 @@ Step 2. The UI calls `Logic#processLoginInfo()` with the login information as in
 Step 3. `Logic#processLoginInfo()` then calls `Storage#login()` on the login information, to check if the information matches any of the account details saved.
 
 Step 4. If there is no match, an error is thrown. If there is a match, the UI then changes from `LoginWindow` to `MainWindow`, which signifies that the user has succesfully logged in.
+
+#### Design consideration
+
+We decided to implement this feature due to the nature of our application. Since it is intended for use by medical staff
+and contains personal information for patients, the ability to protect such information is necessary. Thus, we came up with
+this feature so that only valid users are able to use the system, thereby protecting the information of every patient
+the system contains.
+
+#### \[Proposed\] Admin accounts
+
+Currently, the system is only capable of allowing the user to create new doctor's accounts. For all administrative staff,
+there is only one account that they can use.
+
+By allowing users to create either an admin account or a doctor account, the administrative staff would be allowed to
+have a personalised account to use the system with. However, as there is no section of the application usable by
+administrative staff that needs to keep track of the current user, this feature is low priority and we have not implemented
+it.
+
 
 ### Enhanced find command
 
@@ -274,10 +351,6 @@ which determines which field of the patient to search for. When `FieldContainsKe
 is called, it will check if each keyword is a substring of the specified field of the patient. So long as at least one
 of the keyword passes the check, `FieldContainsKeywordsPredicate#test(Patient patient)` will return true.
 
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
-
 ### Patient profile (GUI feature)
 This feature allows the application to display a patient's details in a clean and readable fashion.
 
@@ -319,6 +392,65 @@ The corresponding UI element is displayed on the right of the `PatientProfile` U
 Thereafter, this next sequence diagram shows how displaying the `PatientProfile` works:
 ![PatientProfileSequenceDiagram](images/PatientProfileSequenceDiagram.png)
 
+### `Context` interface
+
+The `Context` interface acts as a way for MediBook to store the information pertaining to what command was just executed.
+The main reason for needing a `Context` interface is due to the Command design pattern used in the application.
+
+![ContextClassDiagram](images/ContextClassDiagram.png)
+
+Referring to the class diagram above, `LogicManager` is dependent on `Model`, `Command` and `Storage`. Depending on the
+command that was executed, `LogicManager` might want to call different methods from the `Storage` interface. For example,
+if the user wants to edit the IC of a patient, `LogicManager` would want to call the method from `Storage` that would rename the
+medical notes files of the patient to fit the newly updated IC.
+
+However, due to polymorphism and the command design pattern, `LogicManager` does not know what command is being executed yet, it
+needs to know this information in order to decide what to do next. The `Context` interface is thus implemented to solve this issue while
+maintaining the command design pattern.
+
+When any command that can affect the logic within `LogicManager` is executed (such as `EditCommand`, `AccessCommand` etc..), the relevant
+command objects would call the relevant setter method from the class that implements the `Context` interface. `LogicManager` then retrieves
+this information from that very same class, thereby solving the issue without causing any cyclic dependencies while maintaining the command design pattern.
+
+Note:
+
+Some of the commands that makes use of the `Context` interface are:
+* `AccessCommand`
+* `AddCommand`
+* `AddNoteCommand`
+* `ClearCommand`
+* `DeleteCommand`
+* `DeleteNoteCommand`
+* `EditCommand`
+* `EditNoteCommand`
+
+### Charts and `Record` class
+
+This feature allows MediBook to display charts of a patient's past height, weight and BMI records in the patient
+profile page.
+
+#### Implementation
+
+The datapoints displayed on the charts are all obtained from the `Record` class. As seen in the [Model Component](#model-component) section,
+a patient contains a single `Record` object in its field. The `Record` class contains two different `HashMap` that maps
+a `Date` object to a `Height` or `Weight` object.
+
+![RecordSequenceDiagram](images/RecordSequenceDiagram.png)
+
+Everytime a command that updates a patient's `Height` or `Weight` is executed, the new `Height` or `Weight` would be added
+to the `Record` object along with the current `Date`. This means that only `AddCommand` and `EditCommand` will actually update the patient's `Record`.
+The sequence diagram above shows how a patient's `Height` or `Weight` is updated conditionally when an `EditCommand` is executed.
+The sequence diagram for `AddCommand` would look similar to this diagram as well.
+
+* Step 1: An inputs an `EditCommand` for example `edit n/John p/94347823 ...`.
+
+* Step 2: MediBook then parses the input and executes it through the `EditCommand` object created.
+
+* Step 3: The `EditCommand` object then retrieves the patient that is being edited from the `Model`.
+
+* Step 4: The `EditCommand` object then checks if the `Height` or `Weight` of the patient was updated. If either one of the field
+was updated, the `addHeightRecord` and `addWeightRecord` methods would be called in order to store the newly updated `Height`/`Weight`.
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
@@ -355,20 +487,54 @@ Thereafter, this next sequence diagram shows how displaying the `PatientProfile`
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
 | Priority | As a …​                                    | I want to …​                     | So that I can…​                                                        |
-| -------- | ------------------------------------------ | ------------------------------ | ---------------------------------------------------------------------- |
-| `* * *`  | new user                                   | see usage instructions         | refer to instructions when I forget how to use the App                 |
-| `* * *`  | registration admin                                       | add a patient along with their details (fields)               |                                                                        |
-| `* * *`  | registration admin                                       | delete a patient's records                | remove unwanted records from the system                                  |
-| `* * *`  | registration admin                                       | search for a patient's information          | retrieve his/her details |
-| `* *` | registration admin | edit a patient's details
-
-*{More to be added}*
+| -------- | ------------------------------------------ | -------------------------------- | ---------------------------------------------------------------------- |
+| `* * *`  | new user                                   | see usage instructions           | refer to instructions when I forget how to use the App                 |
+| `* * *`  | administrative staff                       | add a patient along with their details (fields) |   keep track of their details                           |
+| `* * *`  | administrative staff                       | delete a patient's records       | remove unwanted records from the system                                |
+| `* * *`  | administrative staff                       | search for a patient's information | retrieve his/her details                                             |
+| `* * *`  | administrative staff                       | edit a patient's details         | update their details                                                   |
+| `* * *`  | doctor                                     | add a medical note               | keep track of their medical history and store consultation notes       |
+| `* * *`  | doctor                                     | delete a medical note            | remove wrong entries                                                   |
+| `* * *`  | doctor                                     | edit a medical note              | correct wrong entries                                                  |
+| `* * *`  | doctor                                     | view a patient's medical details | decide on the appropriate treatment or prescription for the patient    |
+| `* *`    | doctor                                     | view a chart of a patient's height and weight | track the progress of my patient over a period of time    |
 
 ### Use cases
 
 (For all use cases below, the **System** is the `MediBook` and the **Actor** is the `user`, unless specified otherwise)
 
-**UC00 Add a patient**
+**UC00 Login**
+
+**MSS**
+
+1. User requests to login with their username and password.
+2. MediBook switches from the login window to the main app window.
+
+    Use case ends.
+
+**Extensions**
+* 1a. MediBook detects an invalid username or password.
+    *1a1. MediBook shows an error message.
+    *1a2. User requests to login again but with edited inputs.
+    Steps 1a1-1a2 are repeated until the username and password entered are valid.
+    Use case resumes from step 2.
+    
+**UC01 Create an account**
+
+**MSS**
+1. User requests to create a new account with their details. (username, password, name and MCR)
+2. MediBook switches from the create account window to the main app window.
+
+    Use case ends.
+
+**Extensions**
+* 1a. MediBook detects an invalid username, password, name or MCR.
+    *1a1. MediBook shows an error message.
+    *1a2. User requests to create an account again with edited inputs.
+    Steps 1a1-1a2 are repeated until the username, password, name and MCR are valid.
+    Use case resumes from step 2.
+    
+**UC02 Add a patient**
 
 **MSS**
 
@@ -389,7 +555,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     Steps 1b1-1b2 are repeated until the compulsory fields are all provided.
     Use case resumes from step 2.
 
-**UC01 Find a patient**
+**UC03 Find a patient**
 
 **MSS**
 
@@ -406,7 +572,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     Steps 1a1-1a2 are repeated until the syntax of the command is correct.
     Use case resumes from step 2.
 
-**UC02 Delete a patient**
+**UC04 Delete a patient**
 
 **MSS**
 
@@ -417,12 +583,85 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Extensions**
 
-* 1a. MediBook detects if the given IC is invalid.
+* 1a. MediBook detects if the given index is invalid.
 
     * 1a1. MediBook shows an error message.
-    * 1a2. User requests to delete a specific patient by changing the input IC.
-     Steps 1a1-1a2 are repeated until the IC provided is valid.
+    * 1a2. User requests to delete a specific patient by changing the input index.
+     Steps 1a1-1a2 are repeated until the index provided is valid.
      Use case resumes from step 2.
+     
+**UC05 Accessing a patient's profile**
+
+**MSS**
+
+1.  User requests to access a specific patient's profile.
+2.  MediBook display's the patient's profile.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. MediBook detects if the given index is invalid.
+
+    * 1a1. MediBook shows an error message.
+    * 1a2. User requests to delete a specific patient by changing the input index.
+     Steps 1a1-1a2 are repeated until the index provided is valid.
+     Use case resumes from step 2.
+     
+**UC06 Adding a medical note to a patient's profile**
+
+**MSS**
+
+1.  User <ins>accesses a specific patient's profile (UC05)</ins>.
+2.  User requests to add a medical note to the patient's profile.
+3.  MediBook adds a medical note to the patient's profile.
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. MediBook detects an error in the syntax of the command.
+    * 2a1. MediBook shows an error message.
+    * 2a2. User requests to find the patient again but with an updated syntax.
+    Steps 2a1-2a2 are repeated until the syntax of the command is correct.
+    Use case resumes from step 3.
+    
+**UC07 Editing a medical note in a patient's profile**
+
+**MSS**
+
+1.  User <ins>accesses a specific patient's profile (UC05)</ins>.
+2.  User requests to edit a medical note in the patient's profile.
+3.  MediBook edits the medical note specified by the user.
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. MediBook detects an error in the syntax of the command.
+    * 2a1. MediBook shows an error message.
+    * 2a2. User requests to find the patient again but with an updated syntax.
+    Steps 2a1-2a2 are repeated until the syntax of the command is correct.
+    Use case resumes from step 3.
+    
+**UC08 Deleting a medical note from a patient's profile**
+
+**MSS**
+
+1.  User <ins>accesses a specific patient's profile (UC05)</ins>.
+2.  User requests to delete a medical note from the patient's profile.
+3.  MediBook deletes the medical note specified by the user.
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. MediBook detects if the given index is invalid.
+
+    * 2a1. MediBook shows an error message.
+    * 2a2. User requests to delete a specific patient by changing the input index.
+     Steps 2a1-2a2 are repeated until the index provided is valid.
+     Use case resumes from step 3.
 
 
 
@@ -432,8 +671,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 2.  Should be able to hold up to 1000 patients without a noticeable sluggishness in performance for typical usage.
 3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
 4.  Should be simple enough for those who are not proficient in using computers to use.
-
-*{More to be added}*
 
 ### Glossary
 
@@ -457,53 +694,48 @@ testers are expected to do more *exploratory* testing.
 
 1. Initial launch
 
-   1. Download the jar file and copy into an empty folder
+   a. Download the jar file and copy into an empty folder
 
-   1. Double-click the jar file Expected: Shows the Login GUI. The window size may not be optimum.
+   b. Double-click the jar file Expected: Shows the Login GUI. The window size may not be optimum.
    
-   1. User can login using a username or password if they already have one or pick the `create account` option instead.
+   c. User can login using a username or password if they already have one or pick the `create account` option instead.
    
-   1. After users login/create account, the GUI will show a set of sample contacts.
+   d. After users login/create account, the GUI will show a set of sample contacts.
 
 1. Saving window preferences
 
-   1. Resize the window to an optimum size. Move the window to a different location. Close the window.
+   a. Resize the window to an optimum size. Move the window to a different location. Close the window.
 
-   1. Re-launch the app by double-clicking the jar file.<br>
+   b. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
-
-1. _{ more test cases …​ }_
 
 ### Deleting a patient
 
 1. Deleting a patient while all patients are being shown
 
-   1. Test case: `delete 1`<br>
+   a. Test case: `delete 1`<br>
       Expected: Patient with index 1 in the list is deleted from the program. Details of the deleted patient shown in the status message. Timestamp in the status bar is updated.
 
-   2. Test case: `delete`<br>
+   b. Test case: `delete`<br>
       Expected: No patient is deleted. Error details shown in the status message. Status bar remains the same.
 
-   3. Other incorrect delete commands to try: `delete <index outside of list range>`, `delete x` <br>
+   c. Other incorrect delete commands to try: `delete <index outside of list range>`, `delete x` <br>
       Expected: Similar to previous.
-
-1. _{ more test cases …​ }_
 
 ### Saving data
 
 1. Dealing with missing/corrupted data files
 
-   1. To simulate missing data file:
+   a. To simulate missing data file:
       1. Delete medibook.json file located in <project_root>/data.
       2. Run MediBook.
       
       Expected: MediBook starts up with a sample list of 6 patients.
 
-   2. To simulate corrupted file:
+   b. To simulate corrupted file:
       1. Locate medibook.json file located in <project_root>/data.
       2. Change the field input of a patient to a wrong format. e.g. Change the IC of a patient in the json file to start with 'A' instead of the legal letters 'S,T,F,G'.
       3. Run MediBook.
       
       Expected: MediBook starts up with no patients in the list. A warning is displayed in console "Data file not in the correct format. Will be starting with an empty MediBook".
 
-2. _{ more test cases …​ }_
