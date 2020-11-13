@@ -25,7 +25,7 @@ This user guide contains everything that you will need to know about MediBook. T
 
 [Section 3. Features](#3-features) contains all the details of the different features that MediBook provides. We have provided a description and/or sample usage for each feature so that you can easily learn how to use each feature.
 
-[Section 4. FAQ](#4-faq) provides answers to typical issues you might have that are not covered in the previous sections.
+[Section 4. FAQ](#4-faq) provides answers to typical issues you might have that were not covered in the previous sections.
 
 [Section 5. Command summary](#5-command-summary) summarizes the format for each command in a table. This is particularly useful if you simply wish to have a quick reference on the correct format for the commands.
 
@@ -98,6 +98,9 @@ specified patient in MediBook can be added, edited, deleted or found using comma
   `BMI` is the only non-editable field since it is automatically calculated from `HEIGHT` and `WEIGHT`.
   * The medical detail fields are: `ALLERGY`, `CONDITION` and `TREATMENT`.
   * `IC` should be of the format @xxxxxxx#, where @ is a letter S, T, F or G, xxxxxxx is a 7 digit number and # is any letter.
+     IC in our system refers to the patient's identification numbers as provided in the NRIC or FIN.
+        * The National Registration Identity Card (abbreviation: NRIC) is the compulsory identity document issued to citizens and permanent residents of Singapore.
+        * A Foreign Identification Number, or FIN, is issued to an individual who is a permanent resident of Singapore and long-term pass holders by the Singapore government.
   * `NAME` should only have alphanumeric characters and spaces.
   * `DATE_OF_BIRTH` should be given in the format "DD-MM-YYYY" where D, M and Y represent digits of the day, month and year of the date respectively.
   * `PHONE_NUMBER` has to be within 7 to 15 digits long (to support international numbers).
