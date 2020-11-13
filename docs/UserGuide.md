@@ -17,6 +17,9 @@ help manage patient details.** It is **optimized for use via a Command Line Inte
 still having the benefits of a Graphical User Interface (GUI). If you can type fast, MediBook can get your patient 
 details management tasks done faster than traditional methods.
 
+Note: We have designed MediBook's identification fields (i.e. [IC](#3-features) and [MCR](#312-creating-account)) following Singapore's standards.
+However, MediBook can be used in any country so long as unique identification numbers (adhering to MediBook's requirements of [IC](#3-features) and [MCR](#312-creating-account)) are given. 
+
 ### 1.2 Overview
 
 This user guide contains everything that you will need to know about MediBook. The information contained in this user guide will be useful to both new and experienced users alike.
@@ -98,9 +101,9 @@ specified patient in MediBook can be added, edited, deleted or found using comma
   `BMI` is the only non-editable field since it is automatically calculated from `HEIGHT` and `WEIGHT`.
   * The medical detail fields are: `ALLERGY`, `CONDITION` and `TREATMENT`.
   * `IC` should be of the format @xxxxxxx#, where @ is a letter S, T, F or G, xxxxxxx is a 7 digit number and # is any letter.
-     IC in our system refers to the patient's identification numbers as provided in the NRIC or FIN.
-        * The National Registration Identity Card (abbreviation: NRIC) is the compulsory identity document issued to citizens and permanent residents of Singapore.
-        * A Foreign Identification Number, or FIN, is issued to an individual who is a permanent resident of Singapore and long-term pass holders by the Singapore government.
+  IC in our system refers to the patient's identification numbers as provided in the NRIC or FIN.
+    * The National Registration Identity Card (abbreviation: NRIC) is the compulsory identity document issued to citizens and permanent residents of Singapore.
+    * A Foreign Identification Number, or FIN, is issued to an individual who is a permanent resident of Singapore and long-term pass holders by the Singapore government.
   * `NAME` should only have alphanumeric characters and spaces.
   * `DATE_OF_BIRTH` should be given in the format "DD-MM-YYYY" where D, M and Y represent digits of the day, month and year of the date respectively.
   * `PHONE_NUMBER` has to be within 7 to 15 digits long (to support international numbers).
