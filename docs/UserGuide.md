@@ -189,6 +189,8 @@ Shows a message explaining how to access the help page.
 
 <img src="images/screenshots/helpCmd.PNG">
 
+<div style="page-break-after: always;"></div>
+
 #### 3.2.2 Listing all patients: `list`
 
 Shows a list of all patient's records in the system.
@@ -238,6 +240,8 @@ The `edit` command is also used to fill in unspecified fields.
 * `edit` on a field that already exists will update it from the previous value to the new value.
 * `edit` on an optional field that was not specified at the point of adding patient will fill the field with the given value.
 * `edit` on a medical detail field i.e. `ALLERGY`, `CONDITION` and `TREATMENT` will replace all original values in the field.
+
+<div style="page-break-after: always;"></div>
 
 **Examples:**
 
@@ -328,6 +332,8 @@ when on the main list and then `access`-ing the patient's index on the filtered 
 * For your convenience, the date field can be omitted. MediBook will automatically select today's date.
 * If you specify the date of the medical note, it cannot be in the future.
 
+<div style="page-break-after: always;"></div>
+
 **Example:**
 
 Context: You are logged in as Dr Strange (M12345K) and viewing the profile page of patient with IC 'S9123456A'
@@ -356,6 +362,8 @@ when on the main list and then `access`-ing the patient's index on the filtered 
 * You can only edit notes that are authored by you.
 * `INDEX` refers to the index of the medical note displayed in the list of medical notes.
 * If you change the date of the medical note, the new date cannot be in the future.
+
+<div style="page-break-after: always;"></div>
 
 **Example:**
 
@@ -443,6 +451,8 @@ Details of the patients' medical details can be found in `data` --> `medibook.js
 The saved data follow the same formatting restriction as stated in the [Features](#3-features) section. If the saved data is edited such that the file or data format becomes invalid, MediBook will reset the data for that particular file, causing data to be lost.
 
 --------------------------------------------------------------------------------------------------------------------
+
+<div style="page-break-after: always;"></div>
 
 ## 4. FAQ
 
