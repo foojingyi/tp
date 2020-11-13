@@ -6,11 +6,13 @@ title: User Guide
 * Table of Contents
 {:toc}
 
+<div style="page-break-after: always;"></div>
+
 ## 1. Introduction
 
 ### 1.1 Welcome to MediBook
 
-MediBook is a **desktop medical records software targeting doctors and administrative staffs in clinics or hospitals to 
+MediBook is a **desktop medical records software targeting doctors and administrative staff in clinics or hospitals to 
 help manage patient details.** It is **optimized for use via a Command Line Interface** (CLI) while 
 still having the benefits of a Graphical User Interface (GUI). If you can type fast, MediBook can get your patient 
 details management tasks done faster than traditional methods.
@@ -29,6 +31,7 @@ This user guide contains everything that you will need to know about MediBook. T
 
 --------------------------------------------------------------------------------------------------------------------
 
+<div style="page-break-after: always;"></div>
 
 ## 2. Quick start
 
@@ -49,6 +52,8 @@ After starting up MediBook, you should be greeted by the login screen as seen be
 
 <img src="images/screenshots/login.PNG">
 
+<div style="page-break-after: always;"></div>
+
 After clicking on the `Create` button, you should see the account creation page as seen below.
 Proceed with filling in the relevant details for your account.
 For more information about account creation, refer to [Section 3.1 Login and Create Account](#31-login-and-create-account).
@@ -57,11 +62,15 @@ For more information about account creation, refer to [Section 3.1 Login and Cre
 
 If the account creation is successful, you should now be brought to the main page where you can view the details of all the patients.
 
+<div style="page-break-after: always;"></div>
+
 The Command Box (marked by the blue rectangle) is where users type the commands needed to use MediBook.
 
 The Result Display (marked by the red rectangle) is where MediBook displays the result/error for each command input by the user.
 
 <img src="images/screenshots/mainpage.png">
+
+<div style="page-break-after: always;"></div>
 
 The screenshot below shows the patient profile page which you can enter by [accessing a patient's profile](#327-accessing-a-patients-profile--access).
 The patient profile page displays the specific patient's medical details, medical notes and charts of the patient's height, weight and BMI.
@@ -72,6 +81,8 @@ For more information regarding the features, refer to the next section!
 
 
 ---------------------------------------------------------------------------------------------------------------
+
+<div style="page-break-after: always;"></div>
 
 ## 3. Features
 
@@ -108,6 +119,8 @@ specified patient in MediBook can be added, edited, deleted or found using comma
 
 </div>
 
+<div style="page-break-after: always;"></div>
+
 ### 3.1 Login and Create Account
 
 #### 3.1.1 Logging In
@@ -126,6 +139,8 @@ Alternatively, you can also login as an **administrative staff** using the usern
 As an **administrative staff**, you can only add, edit, delete and find patients. 
 You are unable to add, edit or delete medical notes.
 
+<div style="page-break-after: always;"></div>
+
 #### 3.1.2 Creating Account
 
 When creating your new account, fill in your desired `username`, `password`, your `name` and your `MCR`, then click create.
@@ -140,6 +155,8 @@ When creating your new account, fill in your desired `username`, `password`, you
 
 At any point when using the app, the user can choose to logout and return to the login screen by either using the option
 in the menu bar at the top or using the key `F2`.
+
+<div style="page-break-after: always;"></div>
 
 ### 3.2 Commands
 
@@ -159,6 +176,8 @@ Use the follow commands by typing into the command box and hitting enter.
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 
 </div>
+
+<div style="page-break-after: always;"></div>
 
 #### 3.2.1 Viewing help : `help`
 
@@ -182,6 +201,8 @@ Anything typed after list will be ignored and the list of all patient records wi
 
 <img src="images/screenshots/list.PNG">
 
+<div style="page-break-after: always;"></div>
+
 #### 3.2.3 Adding a patient: `add` 
 
 Adds a patient to the system.
@@ -199,6 +220,8 @@ al/Peanut con/Mitral valve prolapse con/asthma t/EpiPen t/metered-dose inhaler`
 *  `add i/S9123579A n/Jon d/29-02-2000 p/91234567`
 
 <img src="images/screenshots/addcmd.PNG">
+
+<div style="page-break-after: always;"></div>
 
 #### 3.2.4 Editing a patient: `edit` 
 
@@ -224,6 +247,8 @@ The `edit` command is also used to fill in unspecified fields.
 
 <img src="images/screenshots/editresult.PNG">
 
+<div style="page-break-after: always;"></div>
+
 #### 3.2.5 Deleting a patient : `delete`
 
 Deletes the specified patient from MediBook.
@@ -238,6 +263,8 @@ Deletes the specified patient from MediBook.
 * `delete 3` deletes the patient with index `3` in the displayed list
 
 <img src="images/screenshots/deleteCmd.PNG">
+
+<div style="page-break-after: always;"></div>
 
 #### 3.2.6 Finding a patient: `find`
 
@@ -259,6 +286,8 @@ Finds patient records by multiple fields and multiple keywords.
 
 <img src="images/screenshots/enhancedFind.PNG">
 
+<div style="page-break-after: always;"></div>
+
 #### 3.2.7 Accessing a patient's profile : `access` 
 
 Accesses a specified patient's profile in MediBook.
@@ -271,12 +300,15 @@ Accesses a specified patient's profile in MediBook.
 * Each patient's profile consists of 3 sections: Personal Details, Medical Details and Medical Notes.
     * Personal Details section (top left): Shows the personal details of the patient, including their Name, IC, Date of Birth, and Phone Number, as well as their Email, Address, Height, Weight, BMI and Blood Type if available.
     * Medical Details section (bottom left): Shows medical details as tags separated into 3 categories, namely: Allergies, (preexisting) Conditions and (ongoing) Treatments.
-    * Medical Notes section (right): A scrollable panel showing the list of medical notes recorded for the specified patient.
+    * Medical Notes section (middle): A scrollable panel showing the list of medical notes recorded for the specified patient.
+    * Medical Charts section (right): A scrollable panel showing the change in the patient’s height, weight and BMI as charts.
 
 **Examples:**
 * `access 1` accesses the first patient in the displayed list
 
 <img src="images/screenshots/access.PNG">
+
+<div style="page-break-after: always;"></div>
 
 #### 3.2.8 Adding a medical note: `addnote`
 
@@ -306,6 +338,8 @@ Adds a medical note that is dated 9 Nov 2020, by Dr Strange (M12345K) with conte
 
 <img src="images/screenshots/addNote.PNG">
 
+<div style="page-break-after: always;"></div>
+
 #### 3.2.9 Editing a medical note: `editnote`
 
 Edits the date and/or content of an existing medical note belonging to a patient, authored by you.
@@ -334,6 +368,8 @@ Updates the date of the medical note with index 1 in the displayed list of medic
 to '09-11-2020' and content to 'Patient had high fever and throat pain'.
 
 <img src="images/screenshots/editNote.PNG">
+
+<div style="page-break-after: always;"></div>
 
 #### 3.2.10 Deleting a medical note: `deletenote`
 
@@ -369,6 +405,8 @@ Exits the program.
 
 `exit`
 
+<div style="page-break-after: always;"></div>
+
 ### 3.3 Charts
 
 MediBook keeps a record of a patient's height and weight. This record can be viewed in chart form when [accessing a patient's profile](#327-accessing-a-patients-profile--access).
@@ -381,6 +419,7 @@ record for a particular date can only be derived if the patient also has both th
 
 <img src="images/screenshots/chartScreenShot.PNG">
 
+<div style="page-break-after: always;"></div>
 
 ### 3.4 Data
 
@@ -414,6 +453,8 @@ The saved data follow the same formatting restriction as stated in the [Features
 3. Replace the data folder on this new computer with that of the first computer.
 
 --------------------------------------------------------------------------------------------------------------------
+
+<div style="page-break-after: always;"></div>
 
 ## 5. Command summary
 
