@@ -21,13 +21,13 @@ details management tasks done faster than traditional methods.
 
 This user guide contains everything that you will need to know about MediBook. The information contained in this user guide will be useful to both new and experienced users alike.
 
-[Section 2. Quick start](#2-quick-start) contains information for new users who wish to start using Medibook.
+[Section 2. Quick start](#2-quick-start) contains information for to help you start using Medibook if you are a new user.
 
-[Section 3. Features](#3-features) contains all the details of the the different features that MediBook provides. The description and/or sample usage for each feature is provided so that users can easily learn how to use each feature.
+[Section 3. Features](#3-features) contains all the details of the different features that MediBook provides. We have provided a description and/or sample usage for each feature so that you can easily learn how to use each feature.
 
-[Section 4. FAQ](#4-faq) provides answers to typical issues which users might have that are not covered in the previous sections.
+[Section 4. FAQ](#4-faq) provides answers to typical issues you might have that are not covered in the previous sections.
 
-[Section 5. Command summary](#5-command-summary) summarizes the format for each command in a table. This is particularly useful for users who simply wish to have a quick reference on the correct format for the commands.
+[Section 5. Command summary](#5-command-summary) summarizes the format for each command in a table. This is particularly useful if you simply wish to have a quick reference on the correct format for the commands.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ This user guide contains everything that you will need to know about MediBook. T
 
 ### 2.2 Starting MediBook for the first time
 
-After starting up MediBook, you should be greeted by the login screen as seen below. New users should click on the
+After starting up MediBook, you should be greeted by the login screen as seen below. If you are a new user, you should click on the
 `Create` button to proceed with creating a new account.
 
 <img src="images/screenshots/login.PNG">
@@ -64,9 +64,9 @@ If the account creation is successful, you should now be brought to the main pag
 
 <div style="page-break-after: always;"></div>
 
-The Command Box (marked by the blue rectangle) is where users type the commands needed to use MediBook.
+The Command Box (marked by the blue rectangle) is where you can type the commands needed to use MediBook.
 
-The Result Display (marked by the red rectangle) is where MediBook displays the result/error for each command input by the user.
+The Result Display (marked by the red rectangle) is where MediBook displays the result/error for each command that you input.
 
 <img src="images/screenshots/mainpage.png">
 
@@ -153,7 +153,7 @@ When creating your new account, fill in your desired `username`, `password`, you
 
 #### 3.1.3 Logout
 
-At any point when using the app, the user can choose to logout and return to the login screen by either using the option
+At any point when using the app, you can choose to logout and return to the login screen by either using the option
 in the menu bar at the top or using the key `F2`.
 
 <div style="page-break-after: always;"></div>
@@ -166,7 +166,7 @@ Use the follow commands by typing into the command box and hitting enter.
 
 **:information_source: Notes about the command format:**<br>
 
-* Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
+* Words in `UPPER_CASE` are the parameters that you should supply to the app.<br>
   e.g. in `add i/IC`, `IC` is a parameter which can be used as `add i/S91234567A`.
 
 * Parameters in square brackets are optional, whilst parameters not in square brackets are compulsory for that command.<br>
