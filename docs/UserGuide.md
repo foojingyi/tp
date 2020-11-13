@@ -121,7 +121,7 @@ specified patient in MediBook can be added, edited, deleted or found using comma
 
 <div style="page-break-after: always;"></div>
 
-### 3.1 Login and Create Account
+### 3.1 Login and Create Account (Preston)
 
 #### 3.1.1 Logging In
 
@@ -270,7 +270,7 @@ Deletes the specified patient from MediBook.
 
 <div style="page-break-after: always;"></div>
 
-#### 3.2.6 Finding a patient: `find`
+#### 3.2.6 Finding a patient: `find` (Zheng Zhi)
 
 Finds patient records by multiple fields and multiple keywords.
 
@@ -292,7 +292,7 @@ Finds patient records by multiple fields and multiple keywords.
 
 <div style="page-break-after: always;"></div>
 
-#### 3.2.7 Accessing a patient's profile : `access` 
+#### 3.2.7 Accessing a patient's profile : `access` (Jing Yi)
 
 Accesses a specified patient's profile in MediBook.
 
@@ -314,7 +314,7 @@ Accesses a specified patient's profile in MediBook.
 
 <div style="page-break-after: always;"></div>
 
-#### 3.2.8 Adding a medical note: `addnote`
+#### 3.2.8 Adding a medical note: `addnote` (Jun Hao)
 
 Adds a medical note to a patient.
 
@@ -346,7 +346,7 @@ Adds a medical note that is dated 9 Nov 2020, by Dr Strange (M12345K) with conte
 
 <div style="page-break-after: always;"></div>
 
-#### 3.2.9 Editing a medical note: `editnote`
+#### 3.2.9 Editing a medical note: `editnote` (Jun Hao)
 
 Edits the date and/or content of an existing medical note belonging to a patient, authored by you.
 
@@ -379,7 +379,7 @@ to '09-11-2020' and content to 'Patient had high fever and throat pain'.
 
 <div style="page-break-after: always;"></div>
 
-#### 3.2.10 Deleting a medical note: `deletenote`
+#### 3.2.10 Deleting a medical note: `deletenote` (Jun Hao)
 
 Deletes a medical note belonging to a patient, authored by you.
 
@@ -415,7 +415,7 @@ Exits the program.
 
 <div style="page-break-after: always;"></div>
 
-### 3.3 Charts
+### 3.3 Charts (Divakar)
 
 MediBook keeps a record of a patient's height and weight. This record can be viewed in chart form when [accessing a patient's profile](#327-accessing-a-patients-profile--access).
 [Adding a patient](#323-adding-a-patient-add) or [Editing a patient's profile](#324-editing-a-patient-edit) will automatically update the patient's height and weight records (assuming the height/weight field is not empty).
